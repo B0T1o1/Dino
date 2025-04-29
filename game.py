@@ -33,7 +33,7 @@ clock = pygame.time.Clock()
 
 y = 300
 y_of_dino = 300
-evens = 1000
+evens = 0
 
 velocity_of_y = 0
 gravity = 2
@@ -55,7 +55,11 @@ class obstacle:
         self.x -= ground_velocity
 
     def get_rect(self):
-        return pygame.Rect(self.x + self.surface.get_width()/4, y -self.height +self.surface.get_height()/2 + 5, self.surface.get_width()/2, self.surface.get_height()/2)
+        if self.name == 'cactus':
+
+            return pygame.Rect(self.x + self.surface.get_width()/4, y -self.height +self.surface.get_height()/2 + 5, self.surface.get_width()/2, self.surface.get_height()/2)
+        else:
+            return pygame.Rect(self.x + self.surface.get_width()/4, y -self.height +self.surface.get_height()/2 + 15, self.surface.get_width()/2 + 10, self.surface.get_height()/2 - 15)
 
 # Create initial obstacles
 currentobstacles = [
@@ -111,14 +115,17 @@ while running:
     else:
         current_dino = dino2
 
-    dino_rect = pygame.Rect(15 + current_dino.get_width()/4, y_of_dino+current_dino.get_height()/5, current_dino.get_width()/2, current_dino.get_height()/2)
+
+    dino_rect = pygame.Rect(15 + current_dino.get_width()/4, y_of_dino+current_dino.get_height()/5, current_dino.get_width()/2, current_dino.get_height()/2 -5)
+    if crouched:
+            dino_rect = pygame.Rect(15 + current_dino.get_width()/4, y_of_dino + current_dino.get_height()/3, current_dino.get_width()/2, current_dino.get_height()/2 )
     screen.blit(current_dino, (15, y_of_dino))
 
     # Move and draw obstacles
     for i, obs in enumerate(currentobstacles):
         obs.move(ground_velocity)
 
-        if obs.x < -10:
+        if obs.x < -30:
             obs_type = random.choice(['cactus', 'bird'])
             if obs_type == 'cactus':
                 currentobstacles[i] = obstacle(1300, cactus, 'cactus', 60)
@@ -155,6 +162,6 @@ over_surface = font.render('Game Over!', True, (123, 129, 126))
 screen.blit(over_surface, (300, 200))
 pygame.display.flip()
 
-time.sleep(20)
+time.sleep(2)
 pygame.quit()
  
